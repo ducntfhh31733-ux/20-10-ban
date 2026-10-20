@@ -1,7 +1,8 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
-import { Music, Volume2, VolumeX } from "lucide-react";
+import { Gift, Volume2, VolumeX } from "lucide-react";
 import {
   toggleRomanticMelody,
   getIsPlayingMelody,
@@ -18,9 +19,11 @@ export default function AudioPlayer({ songUrl }: AudioPlayerProps) {
 
   useEffect(() => {
     setIsPlaying(getIsPlayingMelody());
+
     const unsub = subscribeAudioState((playing) => {
       setIsPlaying(playing);
     });
+
     return unsub;
   }, []);
 
@@ -34,24 +37,37 @@ export default function AudioPlayer({ songUrl }: AudioPlayerProps) {
       <button
         id="btn-toggle-music"
         onClick={handleToggle}
-        className={`audio-toggle-button ${isPlaying ? "playing" : ""}`}
-        title={isPlaying ? "Tắt nhạc lãng mạn" : "Bật nhạc lãng mạn"}
-        aria-label="Toggle background music"
+        className={`audio-toggle-button gift-theme ${
+          isPlaying ? "playing" : ""
+        }`}
+        title={
+          isPlaying
+            ? "Tắt nhạc tặng bạn"
+            : "Bật nhạc tặng bạn"
+        }
+        aria-label="Bật hoặc tắt nhạc nền"
       >
         <div className="audio-disc-icon">
-          <Music size={18} className={isPlaying ? "spin-music" : ""} />
+          <Gift
+            size={18}
+            className={isPlaying ? "spin-music" : ""}
+          />
         </div>
+
         <span className="audio-label">
           {isPlaying ? (
             <>
-              <Volume2 size={16} /> Nhạc Lãng Mạn (Đang phát)
+              <Volume2 size={16} />
+              Nhạc dành tặng bạn 🎁
             </>
           ) : (
             <>
-              <VolumeX size={16} /> Bật Nhạc
+              <VolumeX size={16} />
+              Mở món quà âm nhạc
             </>
           )}
         </span>
+
         {isPlaying && (
           <div className="sound-waves">
             <span className="wave-bar bar-1" />
