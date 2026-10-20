@@ -29,6 +29,9 @@ export default function HeroSection({
   useEffect(() => {
     const calculateTime = () => {
       const start = new Date(startDate).getTime();
+
+      if (Number.isNaN(start)) return;
+
       const now = new Date().getTime();
       const diff = Math.max(0, now - start);
 
@@ -41,13 +44,17 @@ export default function HeroSection({
     };
 
     calculateTime();
+
     const timer = setInterval(calculateTime, 1000);
     return () => clearInterval(timer);
   }, [startDate]);
 
-  const handleBurstHearts = (e: React.MouseEvent) => {
+  const handleBurstHearts = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
     playHeartPop();
-    const rect = (e.target as HTMLElement).getBoundingClientRect();
+
+    const rect = e.currentTarget.getBoundingClientRect();
     const x = (rect.left + rect.width / 2) / window.innerWidth;
     const y = (rect.top + rect.height / 2) / window.innerHeight;
 
@@ -55,7 +62,13 @@ export default function HeroSection({
       particleCount: 40,
       spread: 60,
       origin: { x, y },
-      colors: ["#ff4d79", "#ff758c", "#ffccd5", "#ffd700"],
+      colors: [
+        "#ff8fab",
+        "#ffc2d1",
+        "#ffd6a5",
+        "#d8c8ff",
+        "#ffffff",
+      ],
     });
   };
 
@@ -63,49 +76,75 @@ export default function HeroSection({
     <section className="hero-section">
       <div className="hero-badge-wrap">
         <span className="hero-badge">
-          <Sparkles size={16} className="text-rose-300 animate-spin-slow" />
-          Ngày Phụ Nữ Việt Nam 20/10
-          <Sparkles size={16} className="text-rose-300 animate-spin-slow" />
+          <Sparkles
+            size={16}
+            className="text-rose-300 animate-spin-slow"
+          />
+          Một Món Quà Nhỏ Dành Tặng Thiên
+          <Sparkles
+            size={16}
+            className="text-rose-300 animate-spin-slow"
+          />
         </span>
       </div>
 
       <h1 className="hero-title">
-        Gửi <span className="highlight-wife-name">{wifeName}</span>, Bông Hoa Rạng Rỡ Nhất Của Anh 🌹
+        Gửi{" "}
+        <span className="highlight-wife-name">
+          {wifeName || "Thiên"}
+        </span>
+        , Người Con Gái Đẹp Và Đầy Dịu Dàng 🌷
       </h1>
 
       <p className="hero-subtitle">
-        Cảm ơn em vì đã đến, đã luôn bên cạnh và mang lại muôn vàn ấm áp cho cuộc đời anh.
-        Chúc vợ yêu một ngày 20/10 ngập tràn nụ cười, hạnh phúc và yêu thương bất tận!
+        Thiên à, nhân ngày 20/10, chúc bạn luôn vui vẻ, tự tin
+        và gặp thật nhiều điều tốt đẹp trong cuộc sống. Mong
+        rằng mỗi ngày của bạn đều có những niềm vui nho nhỏ,
+        những nụ cười thật tươi và thật nhiều điều đáng nhớ.
+        Hy vọng món quà này sẽ khiến ngày đặc biệt của bạn
+        thêm phần vui vẻ nhé! 💗
       </p>
 
-      {/* Love Duration Clock */}
+      {/* Đồng hồ đếm thời gian */}
       <div className="love-clock-card">
         <div className="clock-header">
           <Clock size={18} className="text-rose-400" />
-          <span>Hành Trình Tình Yêu Của Chúng Mình</span>
-          <Heart size={16} className="text-rose-400" fill="currentColor" />
+          <span>Thời Gian Kể Từ Ngày Đặc Biệt</span>
+          <Heart
+            size={16}
+            className="text-rose-400"
+            fill="currentColor"
+          />
         </div>
 
         <div className="clock-grid">
           <div className="clock-box">
-            <span className="clock-val">{timeTogether.days.toLocaleString()}</span>
+            <span className="clock-val">
+              {timeTogether.days.toLocaleString("vi-VN")}
+            </span>
             <span className="clock-unit">Ngày</span>
           </div>
+
           <span className="clock-divider">:</span>
+
           <div className="clock-box">
             <span className="clock-val">
               {String(timeTogether.hours).padStart(2, "0")}
             </span>
             <span className="clock-unit">Giờ</span>
           </div>
+
           <span className="clock-divider">:</span>
+
           <div className="clock-box">
             <span className="clock-val">
               {String(timeTogether.minutes).padStart(2, "0")}
             </span>
             <span className="clock-unit">Phút</span>
           </div>
+
           <span className="clock-divider">:</span>
+
           <div className="clock-box">
             <span className="clock-val accent-seconds">
               {String(timeTogether.seconds).padStart(2, "0")}
@@ -115,11 +154,13 @@ export default function HeroSection({
         </div>
 
         <p className="clock-sub">
-          Mỗi một giây trôi qua, anh lại thấy mình may mắn hơn ngày hôm qua vì có em ❤️
+          Chúc Thiên luôn có thật nhiều niềm vui, gặp được
+          những điều tử tế và lưu giữ thật nhiều kỷ niệm đẹp.
+          Mong nụ cười dịu dàng của bạn sẽ luôn rạng rỡ nhé! 🌸
         </p>
       </div>
 
-      {/* CTA action buttons */}
+      {/* Các nút chức năng */}
       <div className="hero-ctas">
         <button
           id="btn-scroll-letter"
@@ -127,7 +168,7 @@ export default function HeroSection({
           className="btn-primary-hero"
         >
           <Mail size={18} />
-          <span>Đọc Thư Tình Gửi Vợ</span>
+          <span>Đọc Lời Nhắn Gửi Thiên</span>
         </button>
 
         <button
@@ -136,17 +177,21 @@ export default function HeroSection({
           className="btn-secondary-hero"
         >
           <Gift size={18} />
-          <span>Nhận Voucher Quà 20/10</span>
+          <span>Khám Phá Món Quà</span>
         </button>
 
         <button
           id="btn-burst-love"
           onClick={handleBurstHearts}
           className="btn-heart-burst"
-          title="Thả ngàn trái tim cho vợ!"
+          title="Gửi những lời chúc tốt đẹp đến Thiên!"
         >
-          <Heart size={20} fill="#ff4d79" color="#ff4d79" />
-          <span>Thả Tim</span>
+          <Heart
+            size={20}
+            fill="#ff8fab"
+            color="#ff8fab"
+          />
+          <span>Gửi Tim Và Lời Chúc</span>
         </button>
       </div>
     </section>

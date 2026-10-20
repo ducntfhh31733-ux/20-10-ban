@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -17,22 +18,22 @@ const DEFAULT_PHOTOS: SweetPhoto[] = [
   {
     id: "default-1",
     url: "/images/bouquet.jpg?v=2",
-    caption: "Bó hoa tươi thắm nhất dành tặng ngày 20/10 của vợ yêu 💐",
+    caption: "Bó hoa xinh xắn gửi tặng cô bạn Thiên nhân ngày 20/10 💐",
     date: "20/10/2026",
     rotation: -3,
   },
   {
     id: "default-2",
     url: "/images/couple.jpg?v=2",
-    caption: "Bình yên nhất là được nắm tay em đi qua mọi giông bão 🌅",
-    date: "Khoảnh khắc yêu thương",
+    caption: "Mong tình bạn của chúng ta luôn có thật nhiều niềm vui và kỷ niệm đẹp 🌷",
+    date: "Những ngày đáng nhớ",
     rotation: 2,
   },
   {
     id: "default-3",
     url: "/images/cake.jpg?v=2",
-    caption: "Mọi sự ngọt ngào đều không sánh bằng nụ cười của em 🍰",
-    date: "Ngọt ngào bên nhau",
+    caption: "Một chút ngọt ngào dành cho cô gái tên Thiên 🍰",
+    date: "Niềm vui nho nhỏ",
     rotation: -2,
   },
 ];
@@ -43,26 +44,34 @@ export default function SweetMoments() {
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("wife_moments_photos");
+      const saved = localStorage.getItem("friend_moments_photos");
+
       if (saved) {
         const parsed: SweetPhoto[] = JSON.parse(saved);
-        const customOnly = parsed.filter((p) => p.id.startsWith("custom-"));
+        const customOnly = parsed.filter((p) =>
+          p.id.startsWith("custom-")
+        );
+
         if (customOnly.length > 0) {
           setPhotos([...DEFAULT_PHOTOS, ...customOnly]);
           return;
         }
       }
+
       setPhotos(DEFAULT_PHOTOS);
     } catch (e) {
       console.error(e);
     }
   }, []);
 
-  const handleUploadPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUploadPhoto = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
     playHeartPop();
+
     const file = files[0];
     const reader = new FileReader();
 
@@ -71,43 +80,74 @@ export default function SweetMoments() {
         const newPhoto: SweetPhoto = {
           id: "custom-" + Date.now(),
           url: event.target.result,
-          caption: "Khoảnh khắc đặc biệt của vợ chồng mình ❤️",
+          caption: "Một kỷ niệm thật đẹp cùng cô bạn Thiên 💖",
           date: new Date().toLocaleDateString("vi-VN"),
           rotation: (Math.random() - 0.5) * 6,
         };
 
-        const updated = [...photos, newPhoto];
-        setPhotos(updated);
-        try {
-          localStorage.setItem("wife_moments_photos", JSON.stringify(updated));
-        } catch (err) {
-          console.warn("Storage quota exceeded or error saving photo", err);
-        }
+        setPhotos((prev) => {
+          const updated = [...prev, newPhoto];
+
+          try {
+            localStorage.setItem(
+              "friend_moments_photos",
+              JSON.stringify(updated)
+            );
+          } catch (err) {
+            console.warn(
+              "Không thể lưu ảnh. Có thể dung lượng lưu trữ đã đầy.",
+              err
+            );
+          }
+
+          return updated;
+        });
       }
+
+      // Cho phép chọn lại cùng một ảnh
+      e.target.value = "";
     };
+
     reader.readAsDataURL(file);
   };
 
-  const handleDeletePhoto = (id: string, e: React.MouseEvent) => {
+  const handleDeletePhoto = (
+    id: string,
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
     e.stopPropagation();
-    const updated = photos.filter((p) => p.id !== id);
-    setPhotos(updated);
-    try {
-      localStorage.setItem("wife_moments_photos", JSON.stringify(updated));
-    } catch (err) {
-      console.error(err);
-    }
+
+    setPhotos((prev) => {
+      const updated = prev.filter((p) => p.id !== id);
+
+      try {
+        localStorage.setItem(
+          "friend_moments_photos",
+          JSON.stringify(updated)
+        );
+      } catch (err) {
+        console.error(err);
+      }
+
+      return updated;
+    });
   };
 
   return (
     <section className="moments-section">
       <div className="section-header">
         <span className="section-tag">
-          <Camera size={16} /> Album Khoảnh Khắc
+          <Camera size={16} />
+          Album Kỷ Niệm Của Thiên 📸
         </span>
-        <h2 className="section-title">Khoảnh Khắc Ngọt Ngào</h2>
+
+        <h2 className="section-title">
+          Những Khoảnh Khắc Đáng Nhớ 💗
+        </h2>
+
         <p className="section-desc">
-          Từng góc nhỏ lưu giữ nụ cười và hành trình hạnh phúc của chúng mình
+          Lưu giữ những niềm vui nho nhỏ, những nụ cười đáng yêu
+          và những kỷ niệm đẹp dành tặng cô bạn Thiên.
         </p>
       </div>
 
@@ -116,7 +156,9 @@ export default function SweetMoments() {
           <div
             key={item.id}
             className="polaroid-card"
-            style={{ transform: `rotate(${item.rotation}deg)` }}
+            style={{
+              transform: `rotate(${item.rotation}deg)`,
+            }}
           >
             <div className="washi-tape" />
 
@@ -132,18 +174,27 @@ export default function SweetMoments() {
             </div>
 
             <div className="polaroid-info">
-              <p className="polaroid-caption">{item.caption}</p>
+              <p className="polaroid-caption">
+                {item.caption}
+              </p>
+
               <div className="polaroid-meta">
                 <span className="polaroid-date">
-                  <Sparkles size={12} className="inline mr-1 text-amber-400" />
+                  <Sparkles
+                    size={12}
+                    className="inline mr-1 text-amber-400"
+                  />
                   {item.date}
                 </span>
 
                 {item.id.startsWith("custom-") && (
                   <button
-                    onClick={(e) => handleDeletePhoto(item.id, e)}
+                    onClick={(e) =>
+                      handleDeletePhoto(item.id, e)
+                    }
                     className="btn-delete-photo"
                     title="Xóa ảnh"
+                    type="button"
                   >
                     <Trash2 size={14} />
                   </button>
@@ -154,7 +205,7 @@ export default function SweetMoments() {
         ))}
       </div>
 
-      {/* Upload button to personalize with real photos */}
+      {/* Nút thêm ảnh kỷ niệm */}
       <div className="moments-actions">
         <input
           ref={fileInputRef}
@@ -164,16 +215,20 @@ export default function SweetMoments() {
           style={{ display: "none" }}
           onChange={handleUploadPhoto}
         />
+
         <button
           id="btn-upload-moment"
           onClick={() => fileInputRef.current?.click()}
           className="btn-add-moment"
+          type="button"
         >
           <Plus size={18} />
-          <span>Thêm Ảnh Kỷ Niệm Của Hai Đứa</span>
+          <span>Thêm Ảnh Kỷ Niệm</span>
         </button>
+
         <p className="moments-note">
-          💡 Bạn có thể bấm để tải ảnh chụp thật của hai vợ chồng lên trực tiếp!
+          💡 Bạn có thể tải lên những bức ảnh yêu thích để làm
+          album dành riêng cho Thiên thêm đặc biệt nhé!
         </p>
       </div>
     </section>

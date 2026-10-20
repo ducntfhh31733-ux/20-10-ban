@@ -11,43 +11,50 @@ interface EnvelopeIntroProps {
   onOpen: () => void;
 }
 
-export default function EnvelopeIntro({ wifeName, songUrl, onOpen }: EnvelopeIntroProps) {
+export default function EnvelopeIntro({
+  wifeName,
+  songUrl,
+  onOpen,
+}: EnvelopeIntroProps) {
   const [isOpening, setIsOpening] = useState(false);
 
   const handleOpenEnvelope = () => {
     if (isOpening) return;
+
     setIsOpening(true);
 
-    // Audio effects
+    // Phát âm thanh khi mở phong thư
     playChime();
     startRomanticMelody(undefined, songUrl);
 
-    // Multistage Confetti explosion
+    // Hiệu ứng pháo giấy ở giữa màn hình
     confetti({
       particleCount: 80,
       spread: 70,
       origin: { y: 0.6 },
-      colors: ["#ff4d79", "#ff758c", "#ffd700", "#ffffff", "#ff80bf"],
+      colors: ["#ff8fab", "#ffc2d1", "#ffd6a5", "#ffffff", "#d8c8ff"],
     });
 
+    // Pháo giấy từ hai bên
     setTimeout(() => {
       confetti({
         particleCount: 100,
         angle: 60,
         spread: 80,
         origin: { x: 0 },
-        colors: ["#ff4d79", "#ff758c", "#ffd700", "#ffffff"],
+        colors: ["#ff8fab", "#ffc2d1", "#ffd6a5", "#ffffff"],
       });
+
       confetti({
         particleCount: 100,
         angle: 120,
         spread: 80,
         origin: { x: 1 },
-        colors: ["#ff4d79", "#ff758c", "#ffd700", "#ffffff"],
+        colors: ["#ff8fab", "#ffc2d1", "#ffd6a5", "#ffffff"],
       });
     }, 300);
 
-    // Trigger reveal after animation finishes
+    // Hiển thị nội dung món quà sau khi mở thư
     setTimeout(() => {
       onOpen();
     }, 1200);
@@ -59,37 +66,63 @@ export default function EnvelopeIntro({ wifeName, songUrl, onOpen }: EnvelopeInt
         <div className="envelope-glow" />
 
         <div className="envelope-card-preview">
-          <div className="envelope-box" onClick={handleOpenEnvelope}>
+          <div
+            className="envelope-box"
+            onClick={handleOpenEnvelope}
+          >
             <div className="envelope-flap" />
             <div className="envelope-pocket" />
 
             <div className="wax-seal">
-              <Heart className="wax-heart-icon" fill="currentColor" />
+              <Heart
+                className="wax-heart-icon"
+                fill="currentColor"
+              />
               <span>20/10</span>
             </div>
 
             <div className="letter-peek">
-              <Sparkles size={16} className="text-amber-300" />
-              <span>Thư gửi {wifeName} ❤️</span>
+              <Sparkles
+                size={16}
+                className="text-amber-300"
+              />
+              <span>Thư gửi {wifeName} 🌷</span>
             </div>
           </div>
         </div>
 
         <div className="envelope-instruction">
           <p className="instruction-badge">
-            <Sparkles size={16} /> Món Quà Bí Mật 20/10
+            <Sparkles size={16} />
+            Một Món Quà Nhỏ Dành Tặng {wifeName}
           </p>
-          <h1 className="instruction-title">Gửi Người Phụ Nữ Anh Yêu Nhất</h1>
+
+          <h1 className="instruction-title">
+            Gửi Cô Gái Dịu Dàng 💗
+          </h1>
+
           <p className="instruction-sub">
-            Chạm vào phong thư để mở món quà đặc biệt anh dành riêng cho {wifeName} nhé! ✨
+            {wifeName} ơi, có một món quà nhỏ cùng những lời chúc
+            chân thành đang chờ bạn khám phá. Mong rằng món quà
+            này sẽ mang đến cho bạn thật nhiều niềm vui và nụ cười.
+            Hãy mở phong thư để xem nhé! ✨
           </p>
+
           <button
             id="btn-open-envelope"
             onClick={handleOpenEnvelope}
             className="envelope-open-btn"
+            disabled={isOpening}
           >
-            <span>Mở Quà Ngay</span>
-            <Heart size={20} className="pulse-heart" fill="currentColor" />
+            <span>
+              {isOpening ? "Đang Mở Quà..." : "Khám Phá Món Quà"}
+            </span>
+
+            <Heart
+              size={20}
+              className="pulse-heart"
+              fill="currentColor"
+            />
           </button>
         </div>
       </div>
